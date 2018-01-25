@@ -1,0 +1,139 @@
+.playerContainer {
+
+}
+
+.emptyLoader {
+    min-height: 114px;
+}
+
+.rowContent {
+    width: 100%;
+    display: inline-block;
+}
+
+.waveRowContainer {
+    text-align: left;
+    height: 94px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.waveRowLeft {
+    text-align: center;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    width: 9%;
+    margin-right: 0.5%;
+}
+
+.repeatBtnImage {
+    position: relative;
+    width: 24px;
+    height: 18px;
+    margin-right: 14%;
+}
+
+.playerSpeedBtnImage {
+    width: 30px;
+    height: 15px;
+    margin-right: 8%;
+}
+
+.hoverableBooButtonOverride {
+    height: 100%;
+}
+
+.waveRowRight {
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 15px;
+    width: 8%;
+    height: 100%;
+}
+
+.waveRowMiddle {
+    text-align: center;
+    display: inline-block;
+    width: 82.5%;
+}
+
+.middleDiv {
+    /*height: 3.125vh*/
+}
+
+.deviceText {
+    color: #ffffff;
+    font-size: 1rem;
+    /*margin-top: 0.9765625vh;*/
+    margin-bottom: 0.9765625vh;
+    text-transform: capitalize;
+}
+
+.inlineBlockCtrl {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 1%;
+}
+
+.playDownloadButtonsWrapper {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-right: 1%;
+}
+
+.btnPlayPause {
+    width: 23px;
+    min-width: 23px;
+    height: 24px;
+}
+
+.btnDownload {
+    position: relative;
+    right: 20px;
+}
+
+.wave {
+    width: 80%;
+}
+
+.rightSideButtons {
+    right: 2.3%
+}
+.closeBtn{
+    height: 15px !important;
+    margin: 0 !important;
+}
+.closeBtnWrapper{
+    position: absolute !important;
+    right: 15px !important;
+    top: 15px !important;
+    z-index: 1 !important;
+}
+
+.morePlayerBtn {
+    padding-top: 5.5px;
+    padding-bottom: 5.5px;
+    margin-right: 15%;
+    width: 22px;
+    height: 17px;
+}
+
+.digitalClock {
+    margin-top: 0.9765625vh;
+    /*margin-bottom: 0.9765625vh;*/
+    /*height: 3.125vh;*/
+}
+
+.thingName {
+    /*height: 1.5625vh;*/
+}
+
+.hidePlayer {
+    display: none;
+}
+
