@@ -1,0 +1,10 @@
+.wrapperDiv{
+    cursor: pointer;
+    height: 30px;
+    display: inline-flex;
+}
+.btnImg{
+    display: inline-block;
+    height: 75%;
+    margin : auto;
+}

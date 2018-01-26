@@ -21,7 +21,7 @@ module.exports = {
         
         rules: [
             {
-                test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/,/\.svg$/],
+                test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/,/\.svg$/,/\.wav$/],
                 loader: require.resolve('url-loader'),
                 options: {
                     limit: 10000,
@@ -39,6 +39,7 @@ module.exports = {
                             babelrc: false,
                             presets: [
                                 ['es2015', { modules: false }],
+                                'transform-object-rest-spread',
                                 'react',
                             ],
                         }

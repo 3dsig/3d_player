@@ -49,7 +49,7 @@ export default () => ({
                         options: {
                             babelrc: false,
                             presets: [
-                                ['es2015', { modules: false }],
+                                ['es2015', 'transform-object-rest-spread', { modules: false }],
                                 'react',
                             ],
                         }

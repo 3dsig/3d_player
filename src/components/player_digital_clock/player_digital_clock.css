@@ -1,0 +1,87 @@
+
+.playerBottomContainer {
+    width: 100%;
+    background: #c9ced6; /*height: 1.5625vh;*/
+}
+
+.playerBottomContent {
+    width: 85%;
+    display: flex;
+    font-size: 1rem;
+    margin: auto;
+    white-space: nowrap;
+    justify-content: space-between;
+    position: relative;
+}
+
+.playerBottomLeft {
+    display: inline-flex;
+    justify-content: space-between;
+    left: 0;
+    width: 29%;
+    max-width: calc(50% - 135px);
+    overflow: hidden;
+    position: absolute;
+}
+
+.playerBottomPanelElapsed {
+    display: inline-block;
+    font-weight: bold;
+}
+
+.playerBottomPanelLength {
+    display: inline-block;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.playerBottomPanelTime {
+    display: inline-block;
+    font-weight: bold;
+}
+
+.playerBottomPanelDate {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.playerBottomCenter {
+    margin: auto;
+    width: 270px
+}
+
+.playerBottomPanelTimestampContentNormal {
+    display: inline-block;
+    background-color: #dee2e8;
+    color: #313438;
+    margin-left: 14px;
+    padding-left: 11px;
+    padding-right: 11px;
+    cursor: pointer;
+}
+.playerBottomPanelTimestampContentActive {
+    display: inline-block;
+    background-color: #ffffff;
+    color: #52b8f0;
+    margin-left: 14px;
+    padding-left: 11px;
+    padding-right: 11px;
+    cursor: pointer;
+}
+
+.playerBottomPanelTimestampValue {
+    display: inline-block;
+    margin-left: 13px;
+    margin-right: 13px;
+}
+
+.playerBottomRight {
+    position: absolute;
+    right: 0;
+    max-width: calc(50% - 135px);
+    overflow: hidden;
+}
+
+.playerBottomPanelRealThing {
+
+}

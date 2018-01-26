@@ -8,7 +8,7 @@ import Wavesurfer from "wavesurfer.js";
 import playButtonIcon from "images/player/play.svg";
 import pauseButtonIcon from "images/player/pause.svg";
 import styles from "./music_file_player.css";
-// import PlayerDigitalClock from "js/components/player_digital_clock/player_digital_clock";
+import PlayerDigitalClock from "components/player_digital_clock/player_digital_clock";
 //import HoverableBooButton from "../hoverable_boo_button/hoverable_boo_button";
 import classNames from "classnames";
 
@@ -46,13 +46,13 @@ class MusicFilePlayer extends Component {
                 this.wavesurfer.pause();
             }
         }
-        if (this.props.fileUrl !== nextProps.url) {
-            this.wavesurfer.load(nextProps.url)
+        if (this.props.fileUrl !== nextProps.fileUrl) {
+            this.wavesurfer.load(nextProps.fileUrl)
         }
     }
 
 
-    createPlayer(playerNumber) {
+    createPlayer() {
         // if (this.wavesurfer) {
         //     this.wavesurfer.destroy();
         // }
@@ -101,38 +101,21 @@ class MusicFilePlayer extends Component {
                         id={`waveform${this.props.playerNumber}`}/>
                 </div>
             </div>
+            
         )
     }
-
-
-    /*{/!*{!this.props.isHidden && // recreate element when player is displayed
-    <PlayerDigitalClock
-        startTime={this.props.startTime}
-        position={this.props.positionSec * 1000}
-        shouldPauseTime={this.props.shouldPauseClock}
-        shouldShowTimestamp={this.props.shouldShowTimestamp}
-        realThing={this.props.realThing}
-        duration={this.props.durationSec * 1000}
-        playerSpeed={this.props.playerSpeed}
-        onTimestampCopiedToClipboard={this.props.onTimestampCopiedToClipboard}
-    />
-    }*!/}*/
-
 }
 
 MusicFilePlayer.propTypes = {
     playerNumber: PropTypes.string.isRequired,
     fileUrl: PropTypes.string.isRequired,
-    // startTime: PropTypes.number.isRequired,
-    // realThing: PropTypes.string.isRequired,
     isHidden: PropTypes.bool.isRequired,
     isPlaying: PropTypes.bool.isRequired,
-    // shouldPauseClock: PropTypes.bool.isRequired,
     isPaused: PropTypes.bool.isRequired,
     onError: PropTypes.func.isRequired,
     onReady: PropTypes.func.isRequired,
     onFinish: PropTypes.func.isRequired,
-    onPosChange: PropTypes.func.isRequired,
+    // onPosChange: PropTypes.func.isRequired,
     onPlay: PropTypes.func.isRequired,
     toggleIsPaused: PropTypes.func.isRequired,
 };

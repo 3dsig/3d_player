@@ -1,5 +1,10 @@
 .playerContainer {
-
+    width: calc(100% - 15px);
+    display: inline-flex;
+    height: 94px;
+}
+.playerAreaContainer{
+    display: flex;
 }
 
 .emptyLoader {
@@ -109,10 +114,11 @@
     margin: 0 !important;
 }
 .closeBtnWrapper{
-    position: absolute !important;
-    right: 15px !important;
-    top: 15px !important;
+    width: 15px;
+    display: inline-flex;
     z-index: 1 !important;
+    margin-right: 10px;
+    margin-top: 10px;
 }
 
 .morePlayerBtn {

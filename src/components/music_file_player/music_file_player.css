@@ -3,21 +3,23 @@
     grid-template-columns: 42px;
     grid-template-rows: 1fr;
     background-color: #3d4145;
-    width: 95%;
-    margin: auto;
+    width: 100%;
+    margin: 0;
+    height: 94px;
 }
 .btnPlayPause{
     grid-column: 1;
     width: 17px;
     height: 19px;
-    margin-top: auto;
-    margin-bottom: auto;
+    margin: auto;
 }
 .waveform{
     grid-column: 2;
+    padding-top: 12px;
+    margin-right: 50px;
 }
 .hidePlayer {
-    visibility: hidden;
+    visibility: hidden !important;
 }
 .hovering{
     position: absolute;

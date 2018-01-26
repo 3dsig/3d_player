@@ -4,12 +4,14 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 // import clientAuthentication from "js/authentication/client_authentication";
-// import playerCloseRest from 'images/player/player_close.svg';
-// import playerCloseActive from 'images/player/player_close_active.svg'
+import playerCloseRest from 'images/player/player_close.svg';
+import playerCloseActive from 'images/player/player_close_active.svg'
 import styles from "./music_player.css";
 import CustomLoader from "components/custom_loader/custom_loader";
 import MusicFilePlayer from "components/music_file_player/music_file_player";
-// import HoverableDonutButton from "../hoverable_donut_button/hoverable_donut_button";
+import HoverableButton from "components/hoverable_button/hoverable_button";
+import PlayerDigitalClock from "components/player_digital_clock/player_digital_clock";
+
 
 const PLAYER_NUMBER = {
     FIRST: 'FIRST',
@@ -45,6 +47,23 @@ class MusicPlayer extends Component {
         this.setState({isPaused: shouldPause});
     };
     
+    resetPlayer = () => {
+        this.setState(
+            {
+                ...this.initialState,
+                isPaused: true,
+            }
+        );
+    }
+    onFinishedPlaylist = () => {
+        if (this.props.onFinishedPlaylist) {
+            this.props.onFinishedPlaylist()
+        }
+        else {
+            this.resetPlayer();
+        }
+    };
+    
     onFinishedPlayingFile = (playerNumber) => {
         
         if (playerNumber === PLAYER_NUMBER.FIRST) {
@@ -65,7 +84,7 @@ class MusicPlayer extends Component {
                 (this.state.playerPlaying === PLAYER_NUMBER.SECOND && this.state.indexSecondPlayerIsPlaying >= this.props.filesToPlay.length)));
         
         if (isNoMoreFilesToPlay) {
-            this.props.onFinishedPlaylist();
+            this.onFinishedPlaylist();
         }
     };
     
@@ -124,15 +143,13 @@ class MusicPlayer extends Component {
     };
     
     componentWillReceiveProps(nextProps) {
-        const isNoMoreFilesToPlay = (nextProps.filesToPlay.length > 0 &&
-            ((this.state.playerPlaying === PLAYER_NUMBER.FIRST && this.state.indexFirstPlayerIsPlaying >= nextProps.filesToPlay.length) ||
-                (this.state.playerPlaying === PLAYER_NUMBER.SECOND && this.state.indexSecondPlayerIsPlaying >= nextProps.filesToPlay.length)));
-        if ((nextProps.isLoading || isNoMoreFilesToPlay)) {
+        if ((nextProps.isLoading)) {
             this.setState(this.initialState);
             // this.firstPositionSec = 0;
             // this.secondPositionSec = 0;
         }
     }
+    
     hidePlayer = () => {
     
     }
@@ -150,27 +167,12 @@ class MusicPlayer extends Component {
         
         const isNoMoreFilesToPlay = (this.state.playerPlaying === PLAYER_NUMBER.FIRST && this.state.indexFirstPlayerIsPlaying >= this.props.filesToPlay.length) ||
             (this.state.playerPlaying === PLAYER_NUMBER.SECOND && this.state.indexSecondPlayerIsPlaying >= this.props.filesToPlay.length);
-        
-        if (this.props.isLoading || isNoMoreFilesToPlay) {
-            return (
-                <CustomLoader
-                    priority={8}
-                    loading={true}
-                    backgroundStyle={backgroundStyle}
-                    foregroundStyle={foregroundStyle}
-                    isRenderChildrenWhileShowing={true}>
-                    
-                    <div className={styles.emptyLoader}/>
-                
-                </CustomLoader>
-            )
-        }
-        
-        let isShowLoader = this.props.isLoading ||
-            (this.state.playerPlaying === PLAYER_NUMBER.FIRST && !this.state.isFirstPlayerFileReadyToPlay) ||
+        const isSomeFileNotReadyToPlay = (this.state.playerPlaying === PLAYER_NUMBER.FIRST && !this.state.isFirstPlayerFileReadyToPlay) ||
             (this.state.playerPlaying === PLAYER_NUMBER.SECOND && !this.state.isSecondPlayerFileReadyToPlay);
-        
-        
+        const isShowLoader = this.props.isLoading || isSomeFileNotReadyToPlay;
+        const currentFileStartTime = this.state.playerPlaying === PLAYER_NUMBER.FIRST ?
+            this.props.filesToPlay[this.state.indexFirstPlayerIsPlaying].startTime :
+            this.props.filesToPlay[this.state.indexSecondPlayerIsPlaying].startTime;
         return (
             <CustomLoader
                 priority={8}
@@ -178,36 +180,60 @@ class MusicPlayer extends Component {
                 backgroundStyle={backgroundStyle}
                 foregroundStyle={foregroundStyle}
                 isRenderChildrenWhileShowing={true}>
-                {/*<HoverableDonutButton
-                    restImageSrc={playerCloseRest}
-                    activeImageSrc={playerCloseActive}
-                    imgClassName={styles.closeBtn}
-                    wrappingDivClassName={styles.closeBtnWrapper}
-                    onClick={this.hidePlayer}/>*/}
-                <div className={styles.playerContainer}>
-                    {this.createPlayer(PLAYER_NUMBER.FIRST)}
-                    {this.createPlayer(PLAYER_NUMBER.SECOND)}
-                </div>
+                {
+                    !this.props.isLoading &&
+                    <div>
+                        <div className={styles.playerAreaContainer}>
+                            
+                            <div className={styles.playerContainer}>
+                                {this.createPlayer(PLAYER_NUMBER.FIRST)}
+                                {this.createPlayer(PLAYER_NUMBER.SECOND)}
+                            </div>
+                            <HoverableButton
+                                restImageSrc={playerCloseRest}
+                                activeImageSrc={playerCloseActive}
+                                imgClassName={styles.closeBtn}
+                                wrappingDivClassName={styles.closeBtnWrapper}
+                                onClick={this.props.onUserClosedPlayer}/>
+                        </div>
+                        {/*<PlayerDigitalClock*/}
+                            {/*shouldPauseTime={this.state.isPaused}*/}
+                            {/*startTime={currentFileStartTime}*/}
+                            {/*shouldShowTimestamp={true}*/}
+                            {/*position={}*/}
+                            {/*duration={}/>*/}
+                    </div>
+                }
+                {
+                    (this.props.isLoading) &&
+                    <div className={styles.emptyLoader}/>
+                }
+            
             </CustomLoader>
-        );
+        )
     }
 }
 
-MusicFilePlayer.defaultProps = {
-    isShow : false,
-    isLoading : false,
-    filesToPlay : [],
-    onFilePlayingChanged : () => {},
-    onFinishedPlaylist : () => {},
-    onErrorPlayingFile : () => {}
+MusicPlayer.defaultProps = {
+    isShow: false,
+    isLoading: false,
+    filesToPlay: [], // file_example =  url, startTime
+    onUserClosedPlayer: () => {
+    },
+    onFilePlayingChanged: () => {
+    },
+    onFinishedPlaylist: null,
+    onErrorPlayingFile: () => {
+    }
 }
 
 MusicPlayer.propTypes = {
-    isShow : PropTypes.bool.isRequired,
+    isShow: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     filesToPlay: PropTypes.array.isRequired,
-    onFilePlayingChanged : PropTypes.func,
+    onFilePlayingChanged: PropTypes.func,
     onFinishedPlaylist: PropTypes.func,
+    onUserClosedPlayer: PropTypes.func,
     onErrorPlayingFile: PropTypes.func,
 };
 
