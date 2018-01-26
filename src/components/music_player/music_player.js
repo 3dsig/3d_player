@@ -229,6 +229,7 @@ class MusicPlayer extends Component {
                             shouldShowTimestamp={true}
                             positionInMilli={this.state.currentPlayingFilePositionInMilli}
                             durationInSeconds={this.state.currentFileDuration}
+                            label={this.props.labelForPlayer}
                         />
                     </div>
                 }
@@ -246,6 +247,7 @@ MusicPlayer.defaultProps = {
     isShow: false,
     isLoading: false,
     filesToPlay: [], // file_example =  url, startTime
+    labelForPlayer: '',
     onUserClosedPlayer: () => {
     },
     onFilePlayingChanged: () => {
@@ -263,6 +265,7 @@ MusicPlayer.propTypes = {
     onFinishedPlaylist: PropTypes.func,
     onUserClosedPlayer: PropTypes.func,
     onErrorPlayingFile: PropTypes.func,
+    labelForPlayer: PropTypes.string
 };
 
 export default MusicPlayer;

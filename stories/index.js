@@ -19,6 +19,7 @@ storiesOf('MusicFilePlayer', module)
                         isShow={true}
                         filesToPlay={filesToPlay}
                         isLoading={false}
+                        labelForPlayer={'shahar is awsome'}
                     />
                 </div>
             )
