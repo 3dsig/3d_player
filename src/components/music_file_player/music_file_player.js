@@ -13,9 +13,10 @@ import PlayerDigitalClock from "components/player_digital_clock/player_digital_c
 import classNames from "classnames";
 
 class MusicFilePlayer extends Component {
-
-    constructor(props) {
+    
+    constructor(props){
         super(props);
+        this.isStartedPlayingYet = false;
     }
 
     componentDidMount() {
@@ -47,6 +48,7 @@ class MusicFilePlayer extends Component {
             }
         }
         if (this.props.fileUrl !== nextProps.fileUrl) {
+            this.isStartedPlayingYet = false;
             this.wavesurfer.load(nextProps.fileUrl)
         }
     }
@@ -72,14 +74,14 @@ class MusicFilePlayer extends Component {
             'waveform-ready': (() => {
                 this.props.onReady(this.props.playerNumber)
             }).bind(this),
-            // 'seek': ((e) => {
-            //     //console.log(`Wavesurfer.onSeek position:${position.originalArgs[0]}`);
-            //     console.log('player seek ' + playerNumber)
-            //     this.forceUpdate(); // request render to update stopper position
-            // }).bind(this),
-            // onPosChange: (position) => this.props.onPosChange(position, this.props.playerNumber),
+            'seek': ((relativePosition) => { //relative position in file 0-1
+                this.props.onPosChange(relativePosition, this.props.playerNumber)
+            }).bind(this),
             'play': (() => {
-                this.props.onPlay()
+                if(!this.isStartedPlayingYet) {
+                    this.isStartedPlayingYet = true;
+                    this.props.onStartedPlaying(this.wavesurfer.getDuration())
+                }
             }).bind(this),
         };
         Object.entries(waveSurferEvents).forEach(([eventName, handler]) => {
@@ -115,8 +117,9 @@ MusicFilePlayer.propTypes = {
     onError: PropTypes.func.isRequired,
     onReady: PropTypes.func.isRequired,
     onFinish: PropTypes.func.isRequired,
+    onPosChange: PropTypes.func.isRequired,
     // onPosChange: PropTypes.func.isRequired,
-    onPlay: PropTypes.func.isRequired,
+    onStartedPlaying: PropTypes.func.isRequired,
     toggleIsPaused: PropTypes.func.isRequired,
 };
 

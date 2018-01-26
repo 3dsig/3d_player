@@ -29,6 +29,8 @@ class MusicPlayer extends Component {
             isFirstPlayerFileReadyToPlay: false,
             isSecondPlayerFileReadyToPlay: false,
             isPaused: false,
+            currentPlayingFilePositionInMilli: 0, //how many milliseconds into the file
+            currentFileDuration: 0,
         };
         
         this.state = {...this.initialState};
@@ -37,21 +39,29 @@ class MusicPlayer extends Component {
         this.createPlayer = this.createPlayer.bind(this);
         this.toggleIsPaused = this.toggleIsPaused.bind(this);
         this.onFinishedPlayingFile = this.onFinishedPlayingFile.bind(this);
-        this.onPlay = this.onPlay.bind(this);
+        this.onStartedPlaying = this.onStartedPlaying.bind(this);
         this.setPlayerAsReady = this.setPlayerAsReady.bind(this);
         this.onError = this.onError.bind(this);
         this.createPlayer = this.createPlayer.bind(this);
     }
     
     toggleIsPaused = (shouldPause) => {
-        this.setState({isPaused: shouldPause});
+        let updateStateWith = {isPaused: shouldPause};
+        if (shouldPause) {
+            const currentPlayingFilePositionInMilli = Math.floor(this[`player_${this.state.playerPlaying}`].wavesurfer.getCurrentTime() * 1000);
+            console.log(`updated time ${currentPlayingFilePositionInMilli}`)
+            updateStateWith.currentPlayingFilePositionInMilli = currentPlayingFilePositionInMilli;
+        }
+        this.setState(updateStateWith);
     };
     
     resetPlayer = () => {
+        const firstFileDuration = this.state.currentFileDuration;
         this.setState(
             {
                 ...this.initialState,
                 isPaused: true,
+                currentFileDuration: firstFileDuration
             }
         );
     }
@@ -61,23 +71,26 @@ class MusicPlayer extends Component {
         }
         else {
             this.resetPlayer();
+            // this.digitalClock.forceUpdate(); //needed to make timer go back to zero
         }
     };
     
     onFinishedPlayingFile = (playerNumber) => {
-        
+        let updateStateWith = {}
         if (playerNumber === PLAYER_NUMBER.FIRST) {
-            this.setState({
+            updateStateWith = {
                 indexFirstPlayerIsPlaying: this.state.indexFirstPlayerIsPlaying + 2,
                 playerPlaying: PLAYER_NUMBER.SECOND,
-            });
+            };
         }
         else {
-            this.setState({
+            updateStateWith = {
                 indexSecondPlayerIsPlaying: this.state.indexSecondPlayerIsPlaying + 2,
                 playerPlaying: PLAYER_NUMBER.FIRST,
-            });
+            };
         }
+        updateStateWith.currentPlayingFilePositionInMilli = 0;
+        this.setState(updateStateWith);
         
         const isNoMoreFilesToPlay = (this.props.filesToPlay.length > 0 &&
             ((this.state.playerPlaying === PLAYER_NUMBER.FIRST && this.state.indexFirstPlayerIsPlaying >= this.props.filesToPlay.length) ||
@@ -88,23 +101,24 @@ class MusicPlayer extends Component {
         }
     };
     
-    onPlay = () => {
+    onStartedPlaying = (duration) => {
         this.props.onFilePlayingChanged(this.state.playerPlaying === PLAYER_NUMBER.FIRST ?
             this.props.filesToPlay[this.state.indexFirstPlayerIsPlaying] :
             this.props.filesToPlay[this.state.indexSecondPlayerIsPlaying]);
+        this.setState({
+            currentFileDuration: duration,
+        })
     };
     
     setPlayerAsReady = (playerNumber) => {
+        let updateStateWith = {};
         if (playerNumber === PLAYER_NUMBER.FIRST) {
-            this.setState({
-                isFirstPlayerFileReadyToPlay: true,
-            });
+            updateStateWith.isFirstPlayerFileReadyToPlay = true;
         }
         else {
-            this.setState({
-                isSecondPlayerFileReadyToPlay: true,
-            });
+            updateStateWith.isSecondPlayerFileReadyToPlay = true;
         }
+        this.setState(updateStateWith);
     };
     
     onError = (fileUrl) => this.props.onErrorPlayingFile(fileUrl);
@@ -116,28 +130,29 @@ class MusicPlayer extends Component {
         let fileToPlay;
         
         // player doesn't have more files we don't it to get an error loading an undefined file
-        // so we just load the other file which we know for sure exists, it won't play, just won't fail to load
+        // so we just load the first file which we know for sure exists, it won't play, just won't fail to load
         if (playerNumber === PLAYER_NUMBER.FIRST) {
-            fileToPlay = firstPlayingIndex >= 0 && firstPlayingIndex < this.props.filesToPlay.length ? this.props.filesToPlay[firstPlayingIndex] : this.props.filesToPlay[secondPlayingIndex];
+            fileToPlay = firstPlayingIndex >= 0 && firstPlayingIndex < this.props.filesToPlay.length ? this.props.filesToPlay[firstPlayingIndex] : this.props.filesToPlay[0];
         }
         else {
-            fileToPlay = secondPlayingIndex >= 0 && secondPlayingIndex < this.props.filesToPlay.length ? this.props.filesToPlay[secondPlayingIndex] : this.props.filesToPlay[firstPlayingIndex];
+            fileToPlay = secondPlayingIndex >= 0 && secondPlayingIndex < this.props.filesToPlay.length ? this.props.filesToPlay[secondPlayingIndex] : this.props.filesToPlay[0];
         }
         
         const isReady = playerNumber === PLAYER_NUMBER.FIRST ? this.state.isFirstPlayerFileReadyToPlay : this.state.isSecondPlayerFileReadyToPlay;
         // const jwt = clientAuthentication.getToken();
         // const url =`/audio/file?thing=${this.props.thingPlaying}&timestamp=${fileToPlay}&type=mp3&token=${jwt}`;
         return <MusicFilePlayer
+            ref={(ref) => this[`player_${playerNumber}`] = ref}
             playerNumber={playerNumber}
-            fileUrl={fileToPlay}
+            fileUrl={fileToPlay.url}
             isHidden={this.state.playerPlaying !== playerNumber}
             isPlaying={this.state.playerPlaying === playerNumber && !this.state.isPaused && isReady}
             isPaused={this.state.isPaused}
             onError={this.onError}
-            onReady={(playerNumber) => this.setPlayerAsReady(playerNumber)}
-            onFinish={(playerNumber) => this.onFinishedPlayingFile(playerNumber)}
+            onReady={this.setPlayerAsReady}
+            onFinish={this.onFinishedPlayingFile}
             onPosChange={this.onPosChange}
-            onPlay={this.onPlay}
+            onStartedPlaying={this.onStartedPlaying}
             toggleIsPaused={this.toggleIsPaused}
         />
     };
@@ -152,6 +167,16 @@ class MusicPlayer extends Component {
     
     hidePlayer = () => {
     
+    }
+    
+    onPosChange = (relativePosition) => { //relative position in file 0-1
+        
+        const currentFileDuration = this.state.currentFileDuration;
+        const currentPlayingFilePositionInMilli = Math.floor(relativePosition * (currentFileDuration * 1000));
+        
+        this.setState({
+            currentPlayingFilePositionInMilli: currentPlayingFilePositionInMilli
+        })
     }
     
     render() {
@@ -170,9 +195,10 @@ class MusicPlayer extends Component {
         const isSomeFileNotReadyToPlay = (this.state.playerPlaying === PLAYER_NUMBER.FIRST && !this.state.isFirstPlayerFileReadyToPlay) ||
             (this.state.playerPlaying === PLAYER_NUMBER.SECOND && !this.state.isSecondPlayerFileReadyToPlay);
         const isShowLoader = this.props.isLoading || isSomeFileNotReadyToPlay;
-        const currentFileStartTime = this.state.playerPlaying === PLAYER_NUMBER.FIRST ?
-            this.props.filesToPlay[this.state.indexFirstPlayerIsPlaying].startTime :
-            this.props.filesToPlay[this.state.indexSecondPlayerIsPlaying].startTime;
+        const currentFileStartTime = isNoMoreFilesToPlay ? 0 : // not relevant if finished playing
+            this.state.playerPlaying === PLAYER_NUMBER.FIRST ?
+                this.props.filesToPlay[this.state.indexFirstPlayerIsPlaying].startTime :
+                this.props.filesToPlay[this.state.indexSecondPlayerIsPlaying].startTime;
         return (
             <CustomLoader
                 priority={8}
@@ -196,12 +222,14 @@ class MusicPlayer extends Component {
                                 wrappingDivClassName={styles.closeBtnWrapper}
                                 onClick={this.props.onUserClosedPlayer}/>
                         </div>
-                        {/*<PlayerDigitalClock*/}
-                            {/*shouldPauseTime={this.state.isPaused}*/}
-                            {/*startTime={currentFileStartTime}*/}
-                            {/*shouldShowTimestamp={true}*/}
-                            {/*position={}*/}
-                            {/*duration={}/>*/}
+                        <PlayerDigitalClock
+                            ref = {(ref) => this.digitalClock = ref}
+                            shouldPauseTime={this.state.isPaused}
+                            startTime={currentFileStartTime}
+                            shouldShowTimestamp={true}
+                            positionInMilli={this.state.currentPlayingFilePositionInMilli}
+                            durationInSeconds={this.state.currentFileDuration}
+                        />
                     </div>
                 }
                 {

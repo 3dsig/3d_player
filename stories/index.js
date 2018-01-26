@@ -9,16 +9,19 @@ import {storiesOf} from '@storybook/react';
 
 storiesOf('MusicFilePlayer', module)
     .add('basic', () => {
-        const filesToPlay = [bearGrowlFile, birdFile, bisonFile];
-        return (
-            <div className="my-component">
-                <MusicPlayer
-                    isShow={true}
-                    filesToPlay={filesToPlay}
-                    isLoading={false}
-                />
-            </div>
-        )
-    }
-)
+            const filesToPlay = [
+                {url: bearGrowlFile, startTime: 123456789},
+                {url: birdFile, startTime: 123456789},
+                {url: bisonFile, startTime: 123456789}];
+            return (
+                <div className="my-component">
+                    <MusicPlayer
+                        isShow={true}
+                        filesToPlay={filesToPlay}
+                        isLoading={false}
+                    />
+                </div>
+            )
+        }
+    )
 ;

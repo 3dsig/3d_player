@@ -26,10 +26,11 @@ class PlayerDigitalClock extends Component {
     startUpdatingTime() {
         this.timeUpdatingMethodID = window.setInterval(function () {
             const millisToAdd = 100 * this.props.playerSpeed;
-            if (this.position) {
-                this.position.add(millisToAdd, 'ms');
+            if (this.positionInMilli) {
+                this.positionInMilli.add(millisToAdd, 'ms');
                 if (document.getElementById('playerClockPosition')) {
-                    document.getElementById('playerClockPosition').textContent = this.position.format(shortTimeFormat);
+                    console.log(`updating to ${this.positionInMilli.format(shortTimeFormat)}`)
+                    document.getElementById('playerClockPosition').textContent = this.positionInMilli.format(shortTimeFormat);
                 }
             }
             if (this.time) {
@@ -48,6 +49,9 @@ class PlayerDigitalClock extends Component {
         if (this.timeUpdatingMethodID) {
             clearInterval(this.timeUpdatingMethodID);
         }
+        if (document.getElementById('playerClockPosition')) {
+            document.getElementById('playerClockPosition').textContent = '0.0';
+        }
     }
 
     onTimestampCopied = (event) => {
@@ -58,10 +62,12 @@ class PlayerDigitalClock extends Component {
 
     render() {
         this.stopUpdatingTime();
-        this.time = moment(this.props.startTime + this.props.position);
-        this.position = moment.utc(this.props.position);
-
-        const duration = moment.utc(this.props.duration).format(shortTimeFormat);
+        this.time = moment(this.props.startTime + this.props.positionInMilli);
+        this.positionInMilli = moment.utc(this.props.positionInMilli);
+        const fileDuration = this.props.durationInSeconds
+        const secondsWithinDuration = Math.floor(fileDuration % 60);
+        const millisecondsWithinDuration = ((fileDuration - Math.floor(fileDuration))*10).toFixed(0)
+        const duration = `${secondsWithinDuration}.${millisecondsWithinDuration}`;
         //console.log(`this.props.duration = ${this.props.duration}          duration = ${duration}`);
         if (!this.props.shouldPauseTime) {
             this.startUpdatingTime();
@@ -72,7 +78,7 @@ class PlayerDigitalClock extends Component {
                 <div className={styles.playerBottomContent}>
                     <div className={styles.playerBottomLeft}>
                         <div>
-                            <div id="playerClockPosition" className={styles.playerBottomPanelElapsed}>{this.position.format(shortTimeFormat)}</div>
+                            <div id="playerClockPosition" className={styles.playerBottomPanelElapsed}>{this.positionInMilli.format(shortTimeFormat)}</div>
                             <div className={styles.playerBottomPanelLength}>{`/ ${duration}`}</div>
                         </div>
                         <div>
@@ -119,9 +125,9 @@ PlayerDigitalClock.propTypes = {
     shouldPauseTime: PropTypes.bool.isRequired,
     startTime: PropTypes.number.isRequired,
     shouldShowTimestamp: PropTypes.bool,
-    position: PropTypes.number.isRequired,
+    positionInMilli: PropTypes.number.isRequired,
 
-    duration: PropTypes.number.isRequired,
+    durationInSeconds: PropTypes.number.isRequired,
     label: PropTypes.string,
     playerSpeed: PropTypes.number,
 
