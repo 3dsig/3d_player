@@ -10,9 +10,9 @@ import {storiesOf} from '@storybook/react';
 storiesOf('MusicFilePlayer', module)
     .add('basic', () => {
             const filesToPlay = [
-                {url: bearGrowlFile, startTime: 123456789},
-                {url: birdFile, startTime: 123456789},
-                {url: bisonFile, startTime: 123456789}];
+                {url: bearGrowlFile, startTime: 1517135053000},
+                {url: birdFile, startTime: 1517135053000},
+                {url: bisonFile, startTime: 1517135053000}];
             return (
                 <div className="my-component">
                     <MusicPlayer
@@ -20,6 +20,7 @@ storiesOf('MusicFilePlayer', module)
                         filesToPlay={filesToPlay}
                         isLoading={false}
                         labelForPlayer={'shahar is awsome'}
+                        clockTimezone={'Europe/Rome'}
                     />
                 </div>
             )

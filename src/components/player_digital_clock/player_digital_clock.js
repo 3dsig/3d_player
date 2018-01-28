@@ -2,7 +2,7 @@
  * Created by shahartaite on 16/12/2016.
  */
 import React, {Component} from 'react';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import styles from './player_digital_clock.css';
 import PropTypes from 'prop-types';
 import copyTimestampActiveBtn from "images/player/copy_active.svg";
@@ -20,6 +20,10 @@ class PlayerDigitalClock extends Component {
         this.state = {
             isCopyButtonHovered: false
         };
+        if(props.clockTimezone) {
+            moment.tz.setDefault(props.clockTimezone);
+        }
+        
     }
 
     startUpdatingTime() {
@@ -28,7 +32,6 @@ class PlayerDigitalClock extends Component {
             if (this.positionInMilli) {
                 this.positionInMilli.add(millisToAdd, 'ms');
                 if (document.getElementById('playerClockPosition')) {
-                    console.log(`updating to ${this.positionInMilli.format(shortTimeFormat)}`)
                     document.getElementById('playerClockPosition').textContent = this.positionInMilli.format(shortTimeFormat);
                 }
             }
@@ -100,7 +103,7 @@ class PlayerDigitalClock extends Component {
                     </div>
 
                     <div className={styles.playerBottomRight}>
-                        <div className={styles.playerBottomPanelRealThing}>{this.props.label}</div>
+                        <div className={styles.playerBottomPanelLabel}>{this.props.label}</div>
                     </div>
 
                 </div>
@@ -128,7 +131,7 @@ PlayerDigitalClock.propTypes = {
     durationInSeconds: PropTypes.number.isRequired,
     label: PropTypes.string,
     playerSpeed: PropTypes.number,
-
+    clockTimezone: PropTypes.string,
     onTimestampCopiedToClipboard: PropTypes.func,
 };
 export default PlayerDigitalClock;

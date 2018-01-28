@@ -182,6 +182,7 @@ class MusicPlayer extends Component {
             'justifyContent': 'center'
         };
         
+        const isFilesSuppliedToComponent = this.props.filesToPlay.length > 0;
         const isNoMoreFilesToPlay = (this.state.playerPlaying === PLAYER_NUMBER.FIRST && this.state.indexFirstPlayerIsPlaying >= this.props.filesToPlay.length) ||
             (this.state.playerPlaying === PLAYER_NUMBER.SECOND && this.state.indexSecondPlayerIsPlaying >= this.props.filesToPlay.length);
         const isSomeFileNotReadyToPlay = (this.state.playerPlaying === PLAYER_NUMBER.FIRST && !this.state.isFirstPlayerFileReadyToPlay) ||
@@ -199,7 +200,7 @@ class MusicPlayer extends Component {
                 foregroundStyle={foregroundStyle}
                 isRenderChildrenWhileShowing={true}>
                 {
-                    !this.props.isLoading &&
+                    (!this.props.isLoading && isFilesSuppliedToComponent) &&
                     <div>
                         <div className={styles.playerAreaContainer}>
                             
@@ -221,6 +222,7 @@ class MusicPlayer extends Component {
                             positionInMilli={this.state.currentPlayingFilePositionInMilli}
                             durationInSeconds={this.state.currentFileDuration}
                             label={this.props.labelForPlayer}
+                            clockTimezone={this.props.clockTimezone}
                         />
                     </div>
                 }
@@ -256,7 +258,8 @@ MusicPlayer.propTypes = {
     onFinishedPlaylist: PropTypes.func,
     onUserClosedPlayer: PropTypes.func,
     onErrorPlayingFile: PropTypes.func,
-    labelForPlayer: PropTypes.string
+    labelForPlayer: PropTypes.string,
+    clockTimezone: PropTypes.string,
 };
 
 export default MusicPlayer;
