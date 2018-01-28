@@ -1,6 +1,7 @@
 {
   "name": "3d_player",
   "version": "1.0.0",
+  "author": "Shahar Taite",
   "scripts": {
     "build": "webpack --config webpack.config.babel.js",
     "release": "webpack --p --config webpack.config.babel.js",
@@ -11,7 +12,8 @@
     "build-examples": "webpack --config examples/webpack.config.babel.js --progress",
     "start": "webpack-dev-server --config examples/webpack.config.babel.js",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prepare-storybook-for-deployment": "build-storybook -c .storybook -o docs"
   },
   "dependencies": {
     "classnames": "^2.2.5",
