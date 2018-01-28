@@ -13,7 +13,7 @@
     "start": "webpack-dev-server --config examples/webpack.config.babel.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "prepare-storybook-for-deployment": "build-storybook -c .storybook -o docs"
+    "prepare-storybook-for-deployment": "build-storybook -c .storybook -o /docs"
   },
   "dependencies": {
     "classnames": "^2.2.5",
