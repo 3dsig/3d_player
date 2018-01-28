@@ -49,7 +49,6 @@ class MusicPlayer extends Component {
         let updateStateWith = {isPaused: shouldPause};
         if (shouldPause) {
             const currentPlayingFilePositionInMilli = Math.floor(this[`player_${this.state.playerPlaying}`].wavesurfer.getCurrentTime() * 1000);
-            console.log(`updated time ${currentPlayingFilePositionInMilli}`)
             updateStateWith.currentPlayingFilePositionInMilli = currentPlayingFilePositionInMilli;
         }
         this.setState(updateStateWith);
@@ -71,7 +70,6 @@ class MusicPlayer extends Component {
         }
         else {
             this.resetPlayer();
-            // this.digitalClock.forceUpdate(); //needed to make timer go back to zero
         }
     };
     
@@ -139,8 +137,6 @@ class MusicPlayer extends Component {
         }
         
         const isReady = playerNumber === PLAYER_NUMBER.FIRST ? this.state.isFirstPlayerFileReadyToPlay : this.state.isSecondPlayerFileReadyToPlay;
-        // const jwt = clientAuthentication.getToken();
-        // const url =`/audio/file?thing=${this.props.thingPlaying}&timestamp=${fileToPlay}&type=mp3&token=${jwt}`;
         return <MusicFilePlayer
             ref={(ref) => this[`player_${playerNumber}`] = ref}
             playerNumber={playerNumber}
@@ -163,10 +159,6 @@ class MusicPlayer extends Component {
             // this.firstPositionSec = 0;
             // this.secondPositionSec = 0;
         }
-    }
-    
-    hidePlayer = () => {
-    
     }
     
     onPosChange = (relativePosition) => { //relative position in file 0-1
@@ -223,7 +215,6 @@ class MusicPlayer extends Component {
                                 onClick={this.props.onUserClosedPlayer}/>
                         </div>
                         <PlayerDigitalClock
-                            ref = {(ref) => this.digitalClock = ref}
                             shouldPauseTime={this.state.isPaused}
                             startTime={currentFileStartTime}
                             shouldShowTimestamp={true}

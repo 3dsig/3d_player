@@ -8,8 +8,6 @@ import Wavesurfer from "wavesurfer.js";
 import playButtonIcon from "images/player/play.svg";
 import pauseButtonIcon from "images/player/pause.svg";
 import styles from "./music_file_player.css";
-import PlayerDigitalClock from "components/player_digital_clock/player_digital_clock";
-//import HoverableBooButton from "../hoverable_boo_button/hoverable_boo_button";
 import classNames from "classnames";
 
 class MusicFilePlayer extends Component {
@@ -55,12 +53,7 @@ class MusicFilePlayer extends Component {
 
 
     createPlayer() {
-        // if (this.wavesurfer) {
-        //     this.wavesurfer.destroy();
-        // }
         this.wavesurfer = Wavesurfer.create(this.wavesurferOptions);
-
-
         const waveSurferEvents = {
             'error': (() => {
                 this.props.onError(this.props.fileUrl)

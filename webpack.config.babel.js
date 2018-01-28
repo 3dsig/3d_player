@@ -7,7 +7,7 @@ const packageJson = require('./package.json');
 
 export default () => ({
     entry: {
-        index: path.join(__dirname, 'src/index.js'),
+        index: path.join(__dirname, 'src/components/music_player/music_player.js'),
     },
     resolve: {
         modules: ['node_modules', paths.appNodeModules, paths.appSrc, paths.appResources]
@@ -29,10 +29,10 @@ export default () => ({
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
         // back to the "file" loader at the end of the loader list.
-        
+    
         rules: [
             {
-                test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/,/\.svg$/],
+                test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/,/\.svg$/,/\.wav$/],
                 loader: require.resolve('url-loader'),
                 options: {
                     limit: 10000,
@@ -40,18 +40,14 @@ export default () => ({
                 },
             },
             {
-                test: /.jsx?$/,
+                test: [/.jsx?$/, /.js?$/],
                 exclude: /node_modules/,
                 include: path.join(__dirname, 'src'),
                 use: [
                     {
                         loader: 'babel-loader',
                         options: {
-                            babelrc: false,
-                            presets: [
-                                ['es2015', 'transform-object-rest-spread', { modules: false }],
-                                'react',
-                            ],
+                            babelrc: true,
                         }
                     }
                 ]

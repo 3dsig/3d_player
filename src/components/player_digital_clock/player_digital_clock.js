@@ -20,7 +20,6 @@ class PlayerDigitalClock extends Component {
         this.state = {
             isCopyButtonHovered: false
         };
-        this.startTimeChanged = false;
     }
 
     startUpdatingTime() {
@@ -54,7 +53,7 @@ class PlayerDigitalClock extends Component {
         }
     }
 
-    onTimestampCopied = (event) => {
+    onTimestampCopied = () => {
         if (this.props.onTimestampCopiedToClipboard)
             this.props.onTimestampCopiedToClipboard(this.props.startTime);
     };
@@ -68,7 +67,6 @@ class PlayerDigitalClock extends Component {
         const secondsWithinDuration = Math.floor(fileDuration % 60);
         const millisecondsWithinDuration = ((fileDuration - Math.floor(fileDuration))*10).toFixed(0)
         const duration = `${secondsWithinDuration}.${millisecondsWithinDuration}`;
-        //console.log(`this.props.duration = ${this.props.duration}          duration = ${duration}`);
         if (!this.props.shouldPauseTime) {
             this.startUpdatingTime();
         }

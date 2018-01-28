@@ -36,12 +36,7 @@ module.exports = {
                     {
                         loader: 'babel-loader',
                         options: {
-                            babelrc: false,
-                            presets: [
-                                ['es2015', { modules: false }],
-                                'transform-object-rest-spread',
-                                'react',
-                            ],
+                            babelrc: true,
                         }
                     }
                 ]
