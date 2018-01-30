@@ -11,7 +11,7 @@ import CustomLoader from "components/custom_loader/custom_loader";
 import MusicFilePlayer from "components/music_file_player/music_file_player";
 import HoverableButton from "components/hoverable_button/hoverable_button";
 import PlayerDigitalClock from "components/player_digital_clock/player_digital_clock";
-
+import consts from 'consts'
 
 const PLAYER_NUMBER = {
     FIRST: 'FIRST',
@@ -20,6 +20,7 @@ const PLAYER_NUMBER = {
 
 
 class MusicPlayer extends Component {
+    
     constructor(props) {
         super(props);
         this.initialState = { // used to rest component state
@@ -31,6 +32,8 @@ class MusicPlayer extends Component {
             isPaused: false,
             currentPlayingFilePositionInMilli: 0, //how many milliseconds into the file
             currentFileDuration: 0,
+            playerSpeed: consts.PLAYER_SPEED.x1,
+            shouldNormalizePlayerWaveBars: this.props.shouldNormalizePlayerWaveBars
         };
         
         this.state = {...this.initialState};
@@ -43,6 +46,7 @@ class MusicPlayer extends Component {
         this.setPlayerAsReady = this.setPlayerAsReady.bind(this);
         this.onError = this.onError.bind(this);
         this.createPlayer = this.createPlayer.bind(this);
+        this.toggleNormalizePlayerWaveBars = this.toggleNormalizePlayerWaveBars.bind(this);
     }
     
     toggleIsPaused = (shouldPause) => {
@@ -141,6 +145,8 @@ class MusicPlayer extends Component {
             ref={(ref) => this[`player_${playerNumber}`] = ref}
             playerNumber={playerNumber}
             fileUrl={fileToPlay.url}
+            fileDownloadUrl={fileToPlay.fileDownloadUrl}
+            saveAsFileName={fileToPlay.saveAsFileName}
             isHidden={this.state.playerPlaying !== playerNumber}
             isPlaying={this.state.playerPlaying === playerNumber && !this.state.isPaused && isReady}
             isPaused={this.state.isPaused}
@@ -150,6 +156,9 @@ class MusicPlayer extends Component {
             onPosChange={this.onPosChange}
             onStartedPlaying={this.onStartedPlaying}
             toggleIsPaused={this.toggleIsPaused}
+            playerSpeed={this.state.playerSpeed}
+            shouldNormalizePlayerWaveBars={this.state.shouldNormalizePlayerWaveBars}
+            toggleNormalizePlayerWaveBars={this.toggleNormalizePlayerWaveBars}
         />
     };
     
@@ -168,6 +177,12 @@ class MusicPlayer extends Component {
         
         this.setState({
             currentPlayingFilePositionInMilli: currentPlayingFilePositionInMilli
+        })
+    }
+    
+    toggleNormalizePlayerWaveBars = () => {
+        this.setState({
+            shouldNormalizePlayerWaveBars : !this.state.shouldNormalizePlayerWaveBars,
         })
     }
     
@@ -239,7 +254,7 @@ class MusicPlayer extends Component {
 MusicPlayer.defaultProps = {
     isShow: false,
     isLoading: false,
-    filesToPlay: [], // file_example =  url, startTime
+    filesToPlay: [], // file_example =  url, startTime, fileDownloadUrl, saveAsFileName
     labelForPlayer: '',
     onUserClosedPlayer: () => {
     },
@@ -247,7 +262,8 @@ MusicPlayer.defaultProps = {
     },
     onFinishedPlaylist: null,
     onErrorPlayingFile: () => {
-    }
+    },
+    shouldNormalizePlayerWaveBars : false,
 }
 
 MusicPlayer.propTypes = {
@@ -260,6 +276,7 @@ MusicPlayer.propTypes = {
     onErrorPlayingFile: PropTypes.func,
     labelForPlayer: PropTypes.string,
     clockTimezone: PropTypes.string,
+    shouldNormalizePlayerWaveBars : PropTypes.bool
 };
 
 export default MusicPlayer;

@@ -1,6 +1,6 @@
 {
   "name": "3d_player",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Shahar Taite",
   "scripts": {
     "build": "webpack --config webpack.config.babel.js",
@@ -21,6 +21,7 @@
     "moment-timezone": "^0.5.14",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
+    "react-click-outside": "^3.0.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.0.0",
     "react-loader-advanced": "^1.7.1",

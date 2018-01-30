@@ -34,14 +34,14 @@
     margin-right: 0.5%;
 }
 
-.repeatBtnImage {
+.repeatImageContainer {
     position: relative;
     width: 24px;
     height: 18px;
     margin-right: 14%;
 }
 
-.playerSpeedBtnImage {
+.halfSpeedBtnContainer {
     width: 30px;
     height: 15px;
     margin-right: 8%;

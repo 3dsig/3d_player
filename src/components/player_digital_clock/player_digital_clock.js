@@ -78,15 +78,10 @@ class PlayerDigitalClock extends Component {
             <div className={styles.playerBottomContainer}>
                 <div className={styles.playerBottomContent}>
                     <div className={styles.playerBottomLeft}>
-                        <div>
                             <div id="playerClockPosition" className={styles.playerBottomPanelElapsed}>{this.positionInMilli.format(shortTimeFormat)}</div>
                             <div className={styles.playerBottomPanelLength}>{`/ ${duration}`}</div>
-                        </div>
-                        <div>
                             <div id="playerClockTime" className={styles.playerBottomPanelTime}>{this.time.format(timeFormat)}</div>
                             <div id="playerClockDate" className={styles.playerBottomPanelDate}>{`/ ${this.time.format(dateFormat)}`}</div>
-                        </div>
-
                     </div>
 
                     <div className={styles.playerBottomCenter}>
@@ -97,7 +92,11 @@ class PlayerDigitalClock extends Component {
                                  onMouseOver={() => this.setState({isCopyButtonHovered: true})}
                                  onMouseLeave={() => this.setState({isCopyButtonHovered: false})}>
                                 <div className={styles.playerBottomPanelTimestampValue}>{this.props.startTime}</div>
-                                <img style={{marginBottom: '2px'}} alt={"copy"} src={this.state.isCopyButtonHovered ? copyTimestampActiveBtn : copyTimestampBtn}/>
+                                <img
+                                    alt={"copy"}
+                                    src={this.state.isCopyButtonHovered ? copyTimestampActiveBtn : copyTimestampBtn}
+                                    className={styles.copyBtn}
+                                />
                             </div>
                         </CopyToClipboard>
                     </div>

@@ -1,0 +1,138 @@
+.mainContainer {
+    width: 334px;
+    position: absolute;
+    z-index: 400;
+    margin-top: -35px;
+    right: calc(5.825% + 10px);
+    border-radius: 7px;
+    background-color: #56595d;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.33);
+    border: solid 1px #74797d;
+    font-size: 1.1rem;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    color: #ffffff;
+}
+
+.moreMenuRow {
+    border-bottom: solid 1px #74797d;
+    height: 53px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.moreMenuBottomRow {
+    height: 53px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.stretchedPlayerViewContent {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.switchImage {
+    width: 51px;
+    height: 20px;
+}
+
+.downloadBtnEnabled {
+    text-decoration: inherit !important;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px;
+    color: white !important;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.downloadBtnEnabled:visited, .downloadBtnEnabled:link, .downloadBtnEnabled:active {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+.downloadBtnDisabled {
+    text-decoration: inherit !important;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px;
+    color: #898b8e !important;
+    border-radius: 5px;
+    cursor:not-allowed;
+}
+
+.downloadBtnDisabled:visited, .downloadBtnDisabled:link, .downloadBtnDisabled:active {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+.downloadBtnActive {
+    text-decoration: inherit !important;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px;
+    color: #52b8f0 !important;
+    border-radius: 5px;
+    background: #3e4145;
+    cursor: pointer;
+}
+
+.downloadBtnActive:visited, .downloadBtnActive:link, .downloadBtnActive:active {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+.image {
+    height: 25px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    background-position: left center;
+}
+
+.link-disabled {
+    cursor: default;
+}
+
+.checkingIcon {
+    background-image: url('images/player/download_disabled_in_progress.svg');
+    width: 60px
+}
+
+.existIcon {
+    background-image: url('images/player/download_enabled.svg');
+    width: 40px;
+}
+
+.existIcon:hover {
+    background-image: url('images/player/download_hover.svg');
+    width: 40px;
+}
+
+.existPressedIcon {
+    background-image: url('images/player/download_pressed.svg');
+    width: 40px;
+}
+
+.notExistIcon {
+    background-image: url('images/player/download_disabled.svg');
+    width: 40px;
+}
+
+
+

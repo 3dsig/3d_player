@@ -10,9 +10,24 @@ import {storiesOf} from '@storybook/react';
 storiesOf('MusicFilePlayer', module)
     .add('basic', () => {
             const filesToPlay = [
-                {url: bearGrowlFile, startTime: 1517135053000},
-                {url: birdFile, startTime: 1517135053000},
-                {url: bisonFile, startTime: 1517135053000}];
+                {
+                    url: bearGrowlFile,
+                    startTime: 1517135053000,
+                    fileDownloadUrl : 'https://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3',
+                    saveAsFileName : 'shahar_is_awsome.mp3'
+                },
+                {
+                    url: birdFile,
+                    startTime: 1517135053000,
+                    fileDownloadUrl : 'https://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3',
+                    saveAsFileName : 'shahar_is_awsome.mp3'
+                },
+                {
+                    url: bisonFile,
+                    startTime: 1517135053000,
+                    fileDownloadUrl : 'https://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3',
+                    saveAsFileName : 'shahar_is_awsome.mp3'
+                }];
             return (
                 <div className="my-component">
                     <MusicPlayer
