@@ -32,10 +32,10 @@ class MusicPlayer extends Component {
             isPaused: false,
             currentPlayingFilePositionInMilli: 0, //how many milliseconds into the file
             currentFileDuration: 0,
-            playerSpeed: consts.PLAYER_SPEED.x1,
+            playerSpeed: this.props.shouldPlayHalfSpeed ? consts.PLAYER_SPEED.x1_2 : consts.PLAYER_SPEED.x1,
             shouldNormalizePlayerWaveBars: this.props.shouldNormalizePlayerWaveBars
         };
-        
+        this.repeatOne = false;
         this.state = {...this.initialState};
         // this.firstPositionSec = 0; // Player position. Is outside of state to prevent render on every change
         // this.secondPositionSec = 0; // Player position. Is outside of state to prevent render on every change
@@ -79,19 +79,31 @@ class MusicPlayer extends Component {
     
     onFinishedPlayingFile = (playerNumber) => {
         let updateStateWith = {}
-        if (playerNumber === PLAYER_NUMBER.FIRST) {
-            updateStateWith = {
-                indexFirstPlayerIsPlaying: this.state.indexFirstPlayerIsPlaying + 2,
-                playerPlaying: PLAYER_NUMBER.SECOND,
-            };
+        updateStateWith.currentPlayingFilePositionInMilli = 0;
+        if(!this.repeatOne) {
+            if (playerNumber === PLAYER_NUMBER.FIRST) {
+                updateStateWith = {
+                    indexFirstPlayerIsPlaying: this.state.indexFirstPlayerIsPlaying + 2,
+                    playerPlaying: PLAYER_NUMBER.SECOND,
+                };
+            }
+            else {
+                updateStateWith = {
+                    indexSecondPlayerIsPlaying: this.state.indexSecondPlayerIsPlaying + 2,
+                    playerPlaying: PLAYER_NUMBER.FIRST,
+                };
+            }
         }
         else {
-            updateStateWith = {
-                indexSecondPlayerIsPlaying: this.state.indexSecondPlayerIsPlaying + 2,
-                playerPlaying: PLAYER_NUMBER.FIRST,
-            };
+            if(playerNumber === PLAYER_NUMBER.FIRST) {
+                updateStateWith.isFirstPlayerFileReadyToPlay = false;
+            }
+            else {
+                updateStateWith.isSecondPlayerFileReadyToPlay = false;
+            }
+    
         }
-        updateStateWith.currentPlayingFilePositionInMilli = 0;
+        this[`player_${playerNumber}`].createPlayer();
         this.setState(updateStateWith);
         
         const isNoMoreFilesToPlay = (this.props.filesToPlay.length > 0 &&
@@ -111,6 +123,10 @@ class MusicPlayer extends Component {
             currentFileDuration: duration,
         })
     };
+    
+    onRepeatClicked = () => {
+        this.repeatOne = !this.repeatOne;
+    }
     
     setPlayerAsReady = (playerNumber) => {
         let updateStateWith = {};
@@ -157,8 +173,10 @@ class MusicPlayer extends Component {
             onStartedPlaying={this.onStartedPlaying}
             toggleIsPaused={this.toggleIsPaused}
             playerSpeed={this.state.playerSpeed}
+            onTogglePlayerSpeed={this.togglePlayerSpeed}
             shouldNormalizePlayerWaveBars={this.state.shouldNormalizePlayerWaveBars}
             toggleNormalizePlayerWaveBars={this.toggleNormalizePlayerWaveBars}
+            onRepeatClicked={this.onRepeatClicked}
         />
     };
     
@@ -183,6 +201,12 @@ class MusicPlayer extends Component {
     toggleNormalizePlayerWaveBars = () => {
         this.setState({
             shouldNormalizePlayerWaveBars : !this.state.shouldNormalizePlayerWaveBars,
+        })
+    }
+    
+    togglePlayerSpeed = () => {
+        this.setState({
+            playerSpeed : this.state.playerSpeed === consts.PLAYER_SPEED.x1_2 ? consts.PLAYER_SPEED.x1 : consts.PLAYER_SPEED.x1_2
         })
     }
     
@@ -264,6 +288,7 @@ MusicPlayer.defaultProps = {
     onErrorPlayingFile: () => {
     },
     shouldNormalizePlayerWaveBars : false,
+    shouldPlayHalfSpeed : false
 }
 
 MusicPlayer.propTypes = {
@@ -276,7 +301,8 @@ MusicPlayer.propTypes = {
     onErrorPlayingFile: PropTypes.func,
     labelForPlayer: PropTypes.string,
     clockTimezone: PropTypes.string,
-    shouldNormalizePlayerWaveBars : PropTypes.bool
+    shouldNormalizePlayerWaveBars : PropTypes.bool,
+    shouldPlayHalfSpeed : PropTypes.bool,
 };
 
 export default MusicPlayer;
