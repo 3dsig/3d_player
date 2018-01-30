@@ -121,6 +121,20 @@
     margin-top: 10px;
 }
 
+.loadingCloseBtn{
+    height: 15px !important;
+    margin: 0 !important;
+    z-index: 11;
+}
+.loadingCloseBtnWrapper{
+    width: 15px;
+    float: right;
+    display: inline-flex;
+    z-index: 1 !important;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
 .morePlayerBtn {
     padding-top: 5.5px;
     padding-bottom: 5.5px;

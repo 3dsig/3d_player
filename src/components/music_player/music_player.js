@@ -80,7 +80,7 @@ class MusicPlayer extends Component {
     onFinishedPlayingFile = (playerNumber) => {
         let updateStateWith = {}
         updateStateWith.currentPlayingFilePositionInMilli = 0;
-        if(!this.repeatOne) {
+        if (!this.repeatOne) {
             if (playerNumber === PLAYER_NUMBER.FIRST) {
                 updateStateWith = {
                     indexFirstPlayerIsPlaying: this.state.indexFirstPlayerIsPlaying + 2,
@@ -95,13 +95,13 @@ class MusicPlayer extends Component {
             }
         }
         else {
-            if(playerNumber === PLAYER_NUMBER.FIRST) {
+            if (playerNumber === PLAYER_NUMBER.FIRST) {
                 updateStateWith.isFirstPlayerFileReadyToPlay = false;
             }
             else {
                 updateStateWith.isSecondPlayerFileReadyToPlay = false;
             }
-    
+            
         }
         this[`player_${playerNumber}`].createPlayer();
         this.setState(updateStateWith);
@@ -200,13 +200,13 @@ class MusicPlayer extends Component {
     
     toggleNormalizePlayerWaveBars = () => {
         this.setState({
-            shouldNormalizePlayerWaveBars : !this.state.shouldNormalizePlayerWaveBars,
+            shouldNormalizePlayerWaveBars: !this.state.shouldNormalizePlayerWaveBars,
         })
     }
     
     togglePlayerSpeed = () => {
         this.setState({
-            playerSpeed : this.state.playerSpeed === consts.PLAYER_SPEED.x1_2 ? consts.PLAYER_SPEED.x1 : consts.PLAYER_SPEED.x1_2
+            playerSpeed: this.state.playerSpeed === consts.PLAYER_SPEED.x1_2 ? consts.PLAYER_SPEED.x1 : consts.PLAYER_SPEED.x1_2
         })
     }
     
@@ -267,7 +267,17 @@ class MusicPlayer extends Component {
                 }
                 {
                     (this.props.isLoading) &&
-                    <div className={styles.emptyLoader}/>
+                    <div>
+                        <div>
+                            <HoverableButton
+                                restImageSrc={playerCloseRest}
+                                activeImageSrc={playerCloseActive}
+                                imgClassName={styles.loadingCloseBtn}
+                                wrappingDivClassName={styles.loadingCloseBtnWrapper}
+                                onClick={this.props.onUserClosedPlayer}/>
+                        </div>
+                        <div className={styles.emptyLoader}/>
+                    </div>
                 }
             
             </CustomLoader>
@@ -287,8 +297,8 @@ MusicPlayer.defaultProps = {
     onFinishedPlaylist: null,
     onErrorPlayingFile: () => {
     },
-    shouldNormalizePlayerWaveBars : false,
-    shouldPlayHalfSpeed : false
+    shouldNormalizePlayerWaveBars: false,
+    shouldPlayHalfSpeed: false
 }
 
 MusicPlayer.propTypes = {
@@ -301,8 +311,8 @@ MusicPlayer.propTypes = {
     onErrorPlayingFile: PropTypes.func,
     labelForPlayer: PropTypes.string,
     clockTimezone: PropTypes.string,
-    shouldNormalizePlayerWaveBars : PropTypes.bool,
-    shouldPlayHalfSpeed : PropTypes.bool,
+    shouldNormalizePlayerWaveBars: PropTypes.bool,
+    shouldPlayHalfSpeed: PropTypes.bool,
 };
 
 export default MusicPlayer;
