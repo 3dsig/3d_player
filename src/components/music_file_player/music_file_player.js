@@ -55,7 +55,7 @@ class MusicFilePlayer extends Component {
         const shouldNormalizePlayerWaveBarsChanged = this.props.shouldNormalizePlayerWaveBars !== nextProps.shouldNormalizePlayerWaveBars;
         const playerSettingsChanged = shouldNormalizePlayerWaveBarsChanged;
         if (playerSettingsChanged) {
-            
+
             this.createPlayer();
         }
         const playerSpeedChanged = this.props.playerSpeed !== nextProps.playerSpeed
