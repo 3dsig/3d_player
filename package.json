@@ -1,7 +1,11 @@
 {
   "name": "3d_player",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Shahar Taite",
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/3dsig/3d_player.git"
+  },
   "scripts": {
     "build": "webpack --config webpack.config.babel.js",
     "release": "webpack --p --config webpack.config.babel.js",
@@ -13,7 +17,7 @@
     "start": "webpack-dev-server --config examples/webpack.config.babel.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "prepare-storybook-for-deployment": "build-storybook -c .storybook -o /docs"
+    "prepare-storybook-for-deployment": "build-storybook -c .storybook -o docs"
   },
   "dependencies": {
     "classnames": "^2.2.5",
