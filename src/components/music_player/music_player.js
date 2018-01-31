@@ -33,9 +33,10 @@ class MusicPlayer extends Component {
             currentPlayingFilePositionInMilli: 0, //how many milliseconds into the file
             currentFileDuration: 0,
             playerSpeed: this.props.shouldPlayHalfSpeed ? consts.PLAYER_SPEED.x1_2 : consts.PLAYER_SPEED.x1,
-            shouldNormalizePlayerWaveBars: this.props.shouldNormalizePlayerWaveBars
+            shouldNormalizePlayerWaveBars: this.props.shouldNormalizePlayerWaveBars,
+            repeatOne : false,
         };
-        this.repeatOne = false;
+        // this.repeatOne = false;
         this.state = {...this.initialState};
         // this.firstPositionSec = 0; // Player position. Is outside of state to prevent render on every change
         // this.secondPositionSec = 0; // Player position. Is outside of state to prevent render on every change
@@ -80,7 +81,7 @@ class MusicPlayer extends Component {
     onFinishedPlayingFile = (playerNumber) => {
         let updateStateWith = {}
         updateStateWith.currentPlayingFilePositionInMilli = 0;
-        if (!this.repeatOne) {
+        if (!this.state.repeatOne) {
             if (playerNumber === PLAYER_NUMBER.FIRST) {
                 updateStateWith = {
                     indexFirstPlayerIsPlaying: this.state.indexFirstPlayerIsPlaying + 2,
@@ -125,7 +126,10 @@ class MusicPlayer extends Component {
     };
     
     onRepeatClicked = () => {
-        this.repeatOne = !this.repeatOne;
+        this.setState({
+            repeatOne : !this.state.repeatOne
+        });
+        //this.repeatOne = !this.repeatOne;
     }
     
     setPlayerAsReady = (playerNumber) => {
@@ -173,6 +177,7 @@ class MusicPlayer extends Component {
             onStartedPlaying={this.onStartedPlaying}
             toggleIsPaused={this.toggleIsPaused}
             playerSpeed={this.state.playerSpeed}
+            isRepeatOne={this.state.repeatOne}
             onTogglePlayerSpeed={this.togglePlayerSpeed}
             shouldNormalizePlayerWaveBars={this.state.shouldNormalizePlayerWaveBars}
             toggleNormalizePlayerWaveBars={this.toggleNormalizePlayerWaveBars}
@@ -211,6 +216,9 @@ class MusicPlayer extends Component {
     }
     
     render() {
+        if(!this.props.isShow){
+            return <div></div>
+        }
         const backgroundStyle = {
             height: '114px',
             background: '#3D4145'

@@ -31,7 +31,7 @@ class MusicFilePlayer extends Component {
     }
     
     componentDidMount() {
-        this.createPlayer(this.props.playerNumber)
+        this.createPlayer(this.props)
     }
     
     componentWillUnmount() {
@@ -56,7 +56,7 @@ class MusicFilePlayer extends Component {
         const playerSettingsChanged = shouldNormalizePlayerWaveBarsChanged;
         if (playerSettingsChanged) {
 
-            this.createPlayer();
+            this.createPlayer(nextProps);
         }
         const playerSpeedChanged = this.props.playerSpeed !== nextProps.playerSpeed
         if(playerSpeedChanged){
@@ -64,49 +64,49 @@ class MusicFilePlayer extends Component {
         }
     }
     
-    createPlayer = () => {
+    createPlayer = (props = this.props) => {
         if(this.wavesurfer) {
             this.wavesurfer.destroy();
         }
         this.wavesurferOptions = {
-            container: `#waveform${this.props.playerNumber}`,
+            container: `#waveform${props.playerNumber}`,
             progressColor: '#4EBAF6',
             waveColor: '#6D747B',
             cursorWidth: 0,
             height: 70,
-            normalize: this.props.shouldNormalizePlayerWaveBars,
-            audioRate: this.props.playerSpeed,
+            normalize: props.shouldNormalizePlayerWaveBars,
+            audioRate: props.playerSpeed,
             hideScrollbar: true,
             responsive: true,
         };
         this.wavesurfer = Wavesurfer.create(this.wavesurferOptions);
         const waveSurferEvents = {
             'error': (() => {
-                this.props.onError(this.props.fileUrl)
+                props.onError(props.fileUrl)
             }).bind(this),
             'ready': (() => {
                 const that = this;
                 setTimeout(() => that.props.onReady(that.props.playerNumber), 1000) //timeout fixes problem in safari where seek doesn't work properly
             }).bind(this),
             'finish': (() => {
-                this.props.onFinish(this.props.playerNumber)
+                props.onFinish(props.playerNumber)
             }).bind(this),
             'waveform-ready': (() => {
             }).bind(this),
             'seek': ((relativePosition) => { //relative position in file 0-1
-                this.props.onPosChange(relativePosition, this.props.playerNumber)
+                props.onPosChange(relativePosition, props.playerNumber)
             }).bind(this),
             'play': (() => {
                 if (!this.isStartedPlayingYet) {
                     this.isStartedPlayingYet = true;
-                    this.props.onStartedPlaying(this.wavesurfer.getDuration())
+                    props.onStartedPlaying(this.wavesurfer.getDuration())
                 }
             }).bind(this),
         };
         Object.entries(waveSurferEvents).forEach(([eventName, handler]) => {
             this.wavesurfer.on(eventName, handler)
         });
-        this.wavesurfer.load(this.props.fileUrl)
+        this.wavesurfer.load(props.fileUrl)
     }
     
     render() {
@@ -121,7 +121,7 @@ class MusicFilePlayer extends Component {
                         restImageSrc={repeatImgSrc}
                         activeImageSrc={repeatHoverActiveImgSrc}
                         onClick={this.props.onRepeatClicked}
-                        isActive={false} //this.props.shouldPlayInLoop
+                        isActive={this.props.isRepeatOne}
                         imgClassName={styles.repeatImg}
                         wrappingDivClassName={styles.repeatImageContainer}
                     />
@@ -130,7 +130,7 @@ class MusicFilePlayer extends Component {
                         restImageSrc={halfSpeedImgSrc}
                         activeImageSrc={halfSpeedHoverActiveImgSrc}
                         onClick={this.props.onTogglePlayerSpeed}
-                        isActive={false} //this.props.playerSpeed === consts.PLAYER_SPEED.x1_2
+                        isActive={this.props.playerSpeed === consts.PLAYER_SPEED.x1_2}
                         wrappingDivClassName={styles.halfSpeedBtnContainer}
                         imgClassName={styles.halfSpeedImg}
                     />
@@ -192,6 +192,7 @@ MusicFilePlayer.propTypes = {
     playerSpeed: PropTypes.number.isRequired,
     onTogglePlayerSpeed : PropTypes.func.isRequired,
     onRepeatClicked: PropTypes.func.isRequired,
+    isRepeatOne: PropTypes.bool.isRequired
     
 };
 
