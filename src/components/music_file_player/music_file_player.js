@@ -83,31 +83,36 @@ class MusicFilePlayer extends Component {
         const waveSurferEvents = {
             'error': (() => {
                 props.onError(props.fileUrl)
-            }).bind(this),
+            }),
+
             'ready': (() => {
                 const that = this;
                 setTimeout(() => that.props.onReady(that.props.playerNumber), 1000) //timeout fixes problem in safari where seek doesn't work properly
-            }).bind(this),
+            }),
+
             'finish': (() => {
                 props.onFinish(props.playerNumber)
-            }).bind(this),
+            }),
+
             'waveform-ready': (() => {
-            }).bind(this),
+            }),
+
             'seek': ((relativePosition) => { //relative position in file 0-1
                 props.onPosChange(relativePosition, props.playerNumber)
-            }).bind(this),
+            }),
+
             'play': (() => {
                 if (!this.isStartedPlayingYet) {
                     this.isStartedPlayingYet = true;
                     props.onStartedPlaying(this.wavesurfer.getDuration())
                 }
-            }).bind(this),
+            }),
         };
         Object.entries(waveSurferEvents).forEach(([eventName, handler]) => {
             this.wavesurfer.on(eventName, handler)
         });
         this.wavesurfer.load(props.fileUrl)
-    }
+    };
     
     render() {
         const hiddenClass = classNames({[styles.hidePlayer]: this.props.isHidden}, styles.hovering);
@@ -184,7 +189,6 @@ MusicFilePlayer.propTypes = {
     onReady: PropTypes.func.isRequired,
     onFinish: PropTypes.func.isRequired,
     onPosChange: PropTypes.func.isRequired,
-    // onPosChange: PropTypes.func.isRequired,
     onStartedPlaying: PropTypes.func.isRequired,
     toggleIsPaused: PropTypes.func.isRequired,
     shouldNormalizePlayerWaveBars : PropTypes.bool.isRequired,

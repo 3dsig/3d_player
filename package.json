@@ -1,10 +1,10 @@
 {
   "name": "3d_player",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "Shahar Taite",
-  "repository" :
-  { "type" : "git"
-  , "url" : "https://github.com/3dsig/3d_player.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/3dsig/3d_player.git"
   },
   "scripts": {
     "build": "webpack --config webpack.config.babel.js",

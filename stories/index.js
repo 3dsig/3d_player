@@ -36,6 +36,7 @@ storiesOf('MusicFilePlayer', module)
                         isLoading={false}
                         labelForPlayer={'shahar is awsome'}
                         clockTimezone={'Europe/Rome'}
+                        shouldRepeatOne={true}
                     />
                 </div>
             )

@@ -57,8 +57,8 @@ class PlayerDigitalClock extends Component {
     }
 
     onTimestampCopied = () => {
-        if (this.props.onTimestampCopiedToClipboard)
-            this.props.onTimestampCopiedToClipboard(this.props.startTime);
+        if (this.props.onStartTimeCopiedToClipboard)
+            this.props.onStartTimeCopiedToClipboard(this.props.startTime);
     };
 
 
@@ -119,7 +119,7 @@ PlayerDigitalClock.defaultProps = {
     shouldShowTimestamp : true,
     label : '',
     playerSpeed : 1
-}
+};
 
 PlayerDigitalClock.propTypes = {
     shouldPauseTime: PropTypes.bool.isRequired,
@@ -131,6 +131,6 @@ PlayerDigitalClock.propTypes = {
     label: PropTypes.string,
     playerSpeed: PropTypes.number,
     clockTimezone: PropTypes.string,
-    onTimestampCopiedToClipboard: PropTypes.func,
+    onStartTimeCopiedToClipboard: PropTypes.func,
 };
 export default PlayerDigitalClock;
