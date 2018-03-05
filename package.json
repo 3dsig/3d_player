@@ -1,6 +1,6 @@
 {
   "name": "3d_player",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "Shahar Taite",
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "lodash": "^4.17.5",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
     "prop-types": "^15.6.0",

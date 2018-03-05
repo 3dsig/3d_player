@@ -18,26 +18,27 @@ import styles from "./music_file_player.css";
 import classNames from "classnames";
 import PlayerMoreMenu from 'components/player_more_menu/player_more_menu';
 import consts from 'consts';
+
 class MusicFilePlayer extends Component {
-    
+
     state = { // used to rest component state
         isMoreMenuOpen: false,
         flacFileStatus: consts.REMOTE_FILE_STATUS.EXIST,
     };
-    
+
     constructor(props) {
         super(props);
         this.isStartedPlayingYet = false;
     }
-    
+
     componentDidMount() {
         this.createPlayer(this.props)
     }
-    
+
     componentWillUnmount() {
         this.wavesurfer.destroy();
     }
-    
+
     componentWillReceiveProps(nextProps) {
         const playerPlayingChanged = this.props.isPlaying !== nextProps.isPlaying;
         if (playerPlayingChanged) {
@@ -50,22 +51,23 @@ class MusicFilePlayer extends Component {
         }
         if (this.props.fileUrl !== nextProps.fileUrl) {
             this.isStartedPlayingYet = false;
-            this.wavesurfer.load(nextProps.fileUrl)
+            this.props.onReadyChanged(this.props.playerNumber, false);
+            this.wavesurfer.load(nextProps.fileUrl);
         }
         const shouldNormalizePlayerWaveBarsChanged = this.props.shouldNormalizePlayerWaveBars !== nextProps.shouldNormalizePlayerWaveBars;
         const playerSettingsChanged = shouldNormalizePlayerWaveBarsChanged;
         if (playerSettingsChanged) {
-
             this.createPlayer(nextProps);
         }
-        const playerSpeedChanged = this.props.playerSpeed !== nextProps.playerSpeed
-        if(playerSpeedChanged){
+        const playerSpeedChanged = this.props.playerSpeed !== nextProps.playerSpeed;
+        if (playerSpeedChanged) {
             this.wavesurfer.setPlaybackRate(nextProps.playerSpeed === consts.PLAYER_SPEED.x1_2 ? 0.5 : 1);
         }
     }
-    
+
     createPlayer = (props = this.props) => {
-        if(this.wavesurfer) {
+        this.props.onReadyChanged(this.props.playerNumber, false);
+        if (this.wavesurfer) {
             this.wavesurfer.destroy();
         }
         this.wavesurferOptions = {
@@ -82,12 +84,13 @@ class MusicFilePlayer extends Component {
         this.wavesurfer = Wavesurfer.create(this.wavesurferOptions);
         const waveSurferEvents = {
             'error': (() => {
-                props.onError(props.fileUrl)
+                this.props.onReadyChanged(this.props.playerNumber, false);
+                props.onError(props.fileUrl);
             }),
 
             'ready': (() => {
-                const that = this;
-                setTimeout(() => that.props.onReady(that.props.playerNumber), 1000) //timeout fixes problem in safari where seek doesn't work properly
+                props.onReadyChanged(props.playerNumber,true);
+//                setTimeout(() => props.onReadyChanged(props.playerNumber,true), 1000) //timeout fixes problem in safari where seek doesn't work properly
             }),
 
             'finish': (() => {
@@ -113,14 +116,16 @@ class MusicFilePlayer extends Component {
         });
         this.wavesurfer.load(props.fileUrl)
     };
-    
+
     render() {
+        // if (this.props.playerNumber === 'FIRST')
+        //     console.log(`first player isPlaying: ${this.props.isPlaying}`);
         const hiddenClass = classNames({[styles.hidePlayer]: this.props.isHidden}, styles.hovering);
         const fileDownloadUrl = this.props.fileDownloadUrl ? this.props.fileDownloadUrl : this.props.fileUrl;
         return (
             <div className={hiddenClass}>
                 <div className={styles.playerContainer}>
-                    
+
                     <HoverableButton
                         tooltip="Play once"
                         restImageSrc={repeatImgSrc}
@@ -142,7 +147,7 @@ class MusicFilePlayer extends Component {
                     <img src={this.props.isPaused ? playButtonIcon : pauseButtonIcon}
                          onClick={() => this.props.toggleIsPaused(!this.props.isPaused)}
                          className={styles.btnPlayPause}/>
-                    
+
                     <div
                         className={styles.waveform}
                         id={`waveform${this.props.playerNumber}`}/>
@@ -166,10 +171,10 @@ class MusicFilePlayer extends Component {
                 />
                 }
             </div>
-        
+
         )
     }
-    
+
     onMoreClicked = () => {
         this.props.toggleIsPaused(true);
         this.setState((prevState) => ({
@@ -177,6 +182,7 @@ class MusicFilePlayer extends Component {
         }));
     };
 }
+
 MusicFilePlayer.propTypes = {
     playerNumber: PropTypes.string.isRequired,
     fileUrl: PropTypes.string.isRequired,
@@ -186,18 +192,18 @@ MusicFilePlayer.propTypes = {
     isPlaying: PropTypes.bool.isRequired,
     isPaused: PropTypes.bool.isRequired,
     onError: PropTypes.func.isRequired,
-    onReady: PropTypes.func.isRequired,
+    onReadyChanged: PropTypes.func.isRequired,
     onFinish: PropTypes.func.isRequired,
     onPosChange: PropTypes.func.isRequired,
     onStartedPlaying: PropTypes.func.isRequired,
     toggleIsPaused: PropTypes.func.isRequired,
-    shouldNormalizePlayerWaveBars : PropTypes.bool.isRequired,
+    shouldNormalizePlayerWaveBars: PropTypes.bool.isRequired,
     toggleNormalizePlayerWaveBars: PropTypes.func.isRequired,
     playerSpeed: PropTypes.number.isRequired,
-    onTogglePlayerSpeed : PropTypes.func.isRequired,
+    onTogglePlayerSpeed: PropTypes.func.isRequired,
     onRepeatClicked: PropTypes.func.isRequired,
     isRepeatOne: PropTypes.bool.isRequired
-    
+
 };
 
 export default MusicFilePlayer;

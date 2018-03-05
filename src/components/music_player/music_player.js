@@ -11,7 +11,7 @@ import MusicFilePlayer from "components/music_file_player/music_file_player";
 import HoverableButton from "components/hoverable_button/hoverable_button";
 import PlayerDigitalClock from "components/player_digital_clock/player_digital_clock";
 import consts from 'consts'
-
+import _ from 'lodash'
 const PLAYER_NUMBER = {
     FIRST: 'FIRST',
     SECOND: 'SECOND'
@@ -43,7 +43,7 @@ class MusicPlayer extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if ((nextProps.isLoading)) {
+        if ((nextProps.isLoading) || this.props.filesToPlay.length !== 0 && !_.isEqual(this.props.filesToPlay,nextProps.filesToPlay)) {
             this.setState(this.initialState);
             // this.firstPositionSec = 0;
             // this.secondPositionSec = 0;
@@ -121,6 +121,7 @@ class MusicPlayer extends Component {
             this.props.filesToPlay[this.state.indexSecondPlayerIsPlaying]);
         this.setState({
             currentFileDuration: duration,
+            isPaused: false
         })
     };
 
@@ -131,13 +132,14 @@ class MusicPlayer extends Component {
         this.props.toggleRepeatOne();
     };
 
-    setPlayerAsReady = (playerNumber) => {
+    setPlayerReady = (playerNumber,isReady) => {
         let updateStateWith = {};
         if (playerNumber === PLAYER_NUMBER.FIRST) {
-            updateStateWith.isFirstPlayerFileReadyToPlay = true;
+            console.log(`setPlayerReady PLAYER_NUMBER.FIRST:${isReady}`);
+            updateStateWith.isFirstPlayerFileReadyToPlay = isReady;
         }
         else {
-            updateStateWith.isSecondPlayerFileReadyToPlay = true;
+            updateStateWith.isSecondPlayerFileReadyToPlay = isReady;
         }
         this.setState(updateStateWith);
     };
@@ -170,7 +172,7 @@ class MusicPlayer extends Component {
             isPlaying={this.state.playerPlaying === playerNumber && !this.state.isPaused && isReady}
             isPaused={this.state.isPaused}
             onError={this.onError}
-            onReady={this.setPlayerAsReady}
+            onReadyChanged={this.setPlayerReady}
             onFinish={this.onFinishedPlayingFile}
             onPosChange={this.onPosChange}
             onStartedPlaying={this.onStartedPlaying}
@@ -231,6 +233,8 @@ class MusicPlayer extends Component {
             this.state.playerPlaying === PLAYER_NUMBER.FIRST ?
                 this.props.filesToPlay[this.state.indexFirstPlayerIsPlaying].startTime :
                 this.props.filesToPlay[this.state.indexSecondPlayerIsPlaying].startTime;
+        const isReady = this.state.playerPlaying === PLAYER_NUMBER.FIRST ? this.state.isFirstPlayerFileReadyToPlay : this.state.isSecondPlayerFileReadyToPlay;
+        console.log(`playerPlaying: ${this.state.playerPlaying}  isPaused:${this.state.isPaused}  isReady:${isReady}`);
         return (
             <CustomLoader
                 priority={8}
@@ -255,7 +259,7 @@ class MusicPlayer extends Component {
                                 onClick={this.props.onUserClosedPlayer}/>
                         </div>
                         <PlayerDigitalClock
-                            shouldPauseTime={this.state.isPaused}
+                            shouldPauseTime={this.state.isPaused || !isReady}
                             startTime={currentFileStartTime}
                             shouldShowTimestamp={true}
                             positionInMilli={this.state.currentPlayingFilePositionInMilli}
